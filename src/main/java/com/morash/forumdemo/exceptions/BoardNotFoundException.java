@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNotFoundException extends Exception {
+public class BoardNotFoundException extends Exception {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4561927710724297314L;
+	private static final long serialVersionUID = 1105434018370109667L;
 
 }

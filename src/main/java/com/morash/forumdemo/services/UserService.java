@@ -34,21 +34,23 @@ public class UserService {
 		return (User) session.getAttribute(SessionKeyNames.USER_KEY);
 	}
 	
-	public User requiredLogin() throws UserNotLoggedInException {
-		// Returns user currently logged into the session
-		// Throws a UserNotLoggedInException if no user is logged in
-		User loggedIn = getCurrentUser();
-		
-		if (loggedIn == null) {
-			throw new UserNotLoggedInException();
-		}
-		
-		return loggedIn;
-	}
-	
 	public void setCurrentUser(User user) {
 		// Sets the sessions current user
 		session.setAttribute(SessionKeyNames.USER_KEY, null);
+	}
+	
+	public User requiredLogin() throws UserNotLoggedInException {
+		// Returns user currently logged into the session
+		// Throws a UserNotLoggedInException if no user is logged in
+		if (!isLoggedIn()) {
+			throw new UserNotLoggedInException();
+		}
+		
+		return getCurrentUser();
+	}
+	
+	public boolean isLoggedIn() {
+		return getCurrentUser() == null;
 	}
 	
 	public boolean attemptLogin(LoginInfo loginInfo) {

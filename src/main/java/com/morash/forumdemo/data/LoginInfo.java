@@ -1,7 +1,5 @@
 package com.morash.forumdemo.data;
 
-import org.apache.catalina.User;
-
 public class LoginInfo {
 	private String redirectOnSuccess = "/";
 	private String username;
