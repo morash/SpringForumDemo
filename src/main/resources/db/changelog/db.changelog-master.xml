@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:pro="http://www.liquibase.org/xml/ns/pro" 
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+  <include file="updates/01-create_initial_tables.xml" relativeToChangelogFile="true"/>
+  <include file="updates/02-implement-auto-increment.xml" relativeToChangelogFile="true"/>
+  <include file="updates/03-force-unique-usernames.xml" relativeToChangelogFile="true"/>
+  <include file="updates/04-administration_items.xml" relativeToChangelogFile="true"/>
+  <include file="updates/05-change_reserved_name_keyword.xml" relativeToChangelogFile="true"/>
+  <include file="updates/06-change_reserved_desc_keyword.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

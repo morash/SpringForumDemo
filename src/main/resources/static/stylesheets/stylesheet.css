@@ -1,0 +1,40 @@
+body {
+	/* 	Force web site to fill entire area */
+	margin: 0px;
+}
+
+header {
+	display: flex;
+	border-bottom: 1px solid black;
+}
+
+header * {
+	margin: 5px;
+}
+
+.headerAccountInfo * {
+	display: inline;
+}
+
+.bodyContainer {
+	margin: 8px;
+}
+
+.topBoardsContainer {
+	float: left;
+}
+
+.blurbTextContainer {
+	display: inline;
+	float: right;
+	width: 250px;
+	padding: 8px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.child_comments {
+	padding-left: 8px;
+	border-left: 2px solid black;
+}
+
