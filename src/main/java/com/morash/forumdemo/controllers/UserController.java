@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -38,6 +39,8 @@ import com.morash.forumdemo.data.constants.ModelKeyNames;
 import com.morash.forumdemo.data.constants.SessionKeyNames;
 import com.morash.forumdemo.data.entity.User;
 import com.morash.forumdemo.data.repository.UserRepository;
+import com.morash.forumdemo.exceptions.UserNotFoundException;
+import com.morash.forumdemo.services.UserService;
 
 /**
  * @author Michael
@@ -47,6 +50,9 @@ import com.morash.forumdemo.data.repository.UserRepository;
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
+	@Autowired
+	private UserService userService;
+	
 	@Autowired
 	UserRepository userRepo;
 
@@ -59,7 +65,7 @@ public class UserController {
 	@PostMapping(value = "/create")
 	public RedirectView create(Model model, User newUser) {
 		// Creates a new user from form input
-		userRepo.save(newUser);
+		userService.createUser(newUser);
 		return new RedirectView("/");
 	}
 
@@ -70,18 +76,13 @@ public class UserController {
 	}
 
 	@PostMapping(value = "/login")
-	public RedirectView login(RedirectAttributes attributes, LoginInfo loginInfo, HttpServletRequest request) {
+	public RedirectView login(RedirectAttributes attributes, LoginInfo loginInfo) {
 		// Attempts to login and add user to the session
 		// Returns to the login page with generic error message if fail
+		boolean loginSuccess = userService.attemptLogin(loginInfo);
 		
-		User loginAttempt = userRepo.findUserWithUsername(loginInfo.getUsername());
-
-		if (loginAttempt != null) {
-			if (loginAttempt.getPassword().equals(loginInfo.getPassword())) {
-				request.getSession().setAttribute(SessionKeyNames.USER_KEY, loginAttempt);
-
-				return new RedirectView("/");
-			}
+		if (loginSuccess) {
+			return new RedirectView(loginInfo.getRedirectOnSuccess());
 		}
 
 		attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.INVALID_CREDENTIALS);
@@ -89,24 +90,18 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/logout")
-	public RedirectView logout(RedirectAttributes attributes, HttpServletRequest request) {
+	public RedirectView logout(RedirectAttributes attributes) {
 		// Removes the user from the session
-		request.getSession().setAttribute(SessionKeyNames.USER_KEY, null);
-
+		userService.logout();
 		return new RedirectView("/");
 	}
 
 	@GetMapping(value = "/view/{userId}")
-	public String view(Model model, @PathVariable(name = "userId") Integer id) {
+	public String view(Model model, @PathVariable(name = "userId") Integer id) throws UserNotFoundException {
 		// Populate model for the user view
 		// Throws 404 when user id isn't recognized
-		Optional<User> userFromId = userRepo.findById(id);
-
-		if (userFromId.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No user found with id " + id);
-		}
-
-		model.addAttribute(ModelKeyNames.USER, userFromId.get());
+		User user = userService.findUser(id);
+		model.addAttribute(ModelKeyNames.USER, user);
 
 		return JspPaths.USER_VIEW;
 	}

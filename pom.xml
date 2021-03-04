@@ -14,7 +14,6 @@
 	<name>forum_demo</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
    		<spring.profiles.active>local,no-liquibase</spring.profiles.active>
 	</properties>
 	<dependencies>
