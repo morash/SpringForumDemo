@@ -24,8 +24,8 @@ import com.morash.forumdemo.exceptions.CommentNotFoundException;
 import com.morash.forumdemo.exceptions.PostNotFoundException;
 import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 import com.morash.forumdemo.services.CommentService;
+import com.morash.forumdemo.services.LoginService;
 import com.morash.forumdemo.services.PostService;
-import com.morash.forumdemo.services.UserService;
 
 /**
  * @author Michael
@@ -36,7 +36,7 @@ import com.morash.forumdemo.services.UserService;
 @RequestMapping("/comment")
 public class CommentController {
 	@Autowired
-	private UserService userService;
+	private LoginService loginService;
 
 	@Autowired
 	private PostService postService;
@@ -53,7 +53,7 @@ public class CommentController {
 
 		Post respondToPost = postService.getPostById(postId);
 
-		if (!userService.isLoggedIn()) {
+		if (!loginService.isLoggedIn()) {
 			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.COMMENT_NO_USER);
 			return new ModelAndView("redirect:/user/login", model);
 		}
@@ -89,7 +89,7 @@ public class CommentController {
 
 		Comment respondToComment = commentService.getCommentById(commentId);
 
-		if (!userService.isLoggedIn()) {
+		if (!loginService.isLoggedIn()) {
 			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.COMMENT_NO_USER);
 			return new ModelAndView("redirect:/user/login", model);
 		}

@@ -27,8 +27,8 @@ import com.morash.forumdemo.exceptions.BoardNotFoundException;
 import com.morash.forumdemo.exceptions.PostNotFoundException;
 import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 import com.morash.forumdemo.services.BoardService;
+import com.morash.forumdemo.services.LoginService;
 import com.morash.forumdemo.services.PostService;
-import com.morash.forumdemo.services.UserService;
 
 /**
  * @author Michael
@@ -38,10 +38,10 @@ import com.morash.forumdemo.services.UserService;
 @RequestMapping("/post")
 public class PostController {
 	@Autowired
-	private BoardService boardService;
+	private LoginService loginService;
 	
 	@Autowired
-	private UserService userService;
+	private BoardService boardService;
 	
 	@Autowired
 	private PostService postService;
@@ -55,7 +55,7 @@ public class PostController {
 		
 		Board b = boardService.getBoardByName(boardName);
 		
-		if (!userService.isLoggedIn()) {
+		if (!loginService.isLoggedIn()) {
 			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.POST_NO_USER);
 			return new ModelAndView("redirect:/user/login", model);
 		}

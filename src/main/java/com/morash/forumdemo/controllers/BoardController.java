@@ -22,13 +22,13 @@ import com.morash.forumdemo.data.entity.Post;
 import com.morash.forumdemo.exceptions.BoardNotFoundException;
 import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 import com.morash.forumdemo.services.BoardService;
-import com.morash.forumdemo.services.UserService;
+import com.morash.forumdemo.services.LoginService;
 
 @Controller
 @RequestMapping("/board")
 public class BoardController {
 	@Autowired
-	private UserService userService;
+	private LoginService loginService;
 	
 	@Autowired
 	private BoardService boardService;
@@ -49,7 +49,7 @@ public class BoardController {
 		// Serves the form page to create a new board
 		// Redirects to login page if user isn't registered to session
 		
-		if (!userService.isLoggedIn()) {
+		if (!loginService.isLoggedIn()) {
 			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.BOARD_NO_USER);
 			return new ModelAndView("redirect:/user/login", model);
 		}

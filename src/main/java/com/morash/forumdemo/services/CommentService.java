@@ -15,7 +15,7 @@ import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 @Service
 public class CommentService {
 	@Autowired
-	private UserService userService;
+	private LoginService loginService;
 	
 	@Autowired
 	private CommentRepository commentRepo;
@@ -31,7 +31,7 @@ public class CommentService {
 	}
 	
 	public void createComment(Comment newComment, Post respondingToPost, Comment respondingToComment) throws UserNotLoggedInException {
-		newComment.setPoster(userService.requiredLogin());
+		newComment.setPoster(loginService.requiredLogin());
 		newComment.setRespondingToPost(respondingToPost);
 		newComment.setRespondingToComment(respondingToComment);
 		newComment.setPostDate(LocalDateTime.now());

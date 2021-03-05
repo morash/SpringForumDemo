@@ -25,7 +25,7 @@ import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 @Service
 public class BoardService {
 	@Autowired
-	private UserService userService;
+	private LoginService loginService;
 	
 	@Autowired
 	private BoardRepository boardRepo;
@@ -48,7 +48,7 @@ public class BoardService {
 	}
 	
 	public void createBoard(Board newBoard) throws UserNotLoggedInException {
-		newBoard.setCreatedBy(userService.requiredLogin());
+		newBoard.setCreatedBy(loginService.requiredLogin());
 		boardRepo.save(newBoard);
 	}
 	

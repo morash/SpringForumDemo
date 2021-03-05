@@ -27,7 +27,7 @@ import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 @Service
 public class PostService {
 	@Autowired
-	private UserService userService;
+	private LoginService loginService;
 	
 	@Autowired
 	private PostRepository postRepo;
@@ -47,7 +47,7 @@ public class PostService {
 	
 	public void createPost(Board board, Post post) throws UserNotLoggedInException {
 		post.setBoard(board);
-		post.setPoster(userService.requiredLogin());
+		post.setPoster(loginService.requiredLogin());
 		post.setPostDate(LocalDateTime.now());
 		
 		postRepo.save(post);
