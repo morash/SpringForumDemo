@@ -6,6 +6,7 @@
 	<h3>${ post.getTitle() }</h3>
 	<p>${ post.getContents() }</p>
 	<form action="/comment/create/respondtopost/${ post.getId() }" method="POST">
+    	<c:import url="../../imports/csrf_token.jsp"/>
 		<label>Comment: </label>
 		<textarea name="contents"></textarea>
 		<button type="submit">Submit</button>

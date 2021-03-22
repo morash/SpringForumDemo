@@ -40,7 +40,7 @@ public class BoardService {
 	public Board getBoardByName(String name) throws BoardNotFoundException {
 		Optional<Board> board = boardRepo.findBoardByName(name);
 		
-		if (board.isEmpty()) {
+		if (!board.isPresent()) {
 			throw new BoardNotFoundException();
 		}
 		

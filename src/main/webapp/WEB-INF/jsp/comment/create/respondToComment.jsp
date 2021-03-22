@@ -28,6 +28,7 @@
 							<p>${ comment.getContents() }</p>
 							<div class="child_comments">
 								<form action="/comment/create/respondtocomment/${ comment.getId() }" method="POST">
+    								<c:import url="../../imports/csrf_token.jsp"/>
 									<label>Comment: </label>
 									<textarea name="contents"></textarea>
 									<button type="submit">Submit</button>

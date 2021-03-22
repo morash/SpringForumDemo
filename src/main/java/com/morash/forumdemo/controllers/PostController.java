@@ -55,11 +55,6 @@ public class PostController {
 		
 		Board b = boardService.getBoardByName(boardName);
 		
-		if (!loginService.isLoggedIn()) {
-			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.POST_NO_USER);
-			return new ModelAndView("redirect:/user/login", model);
-		}
-		
 		model.addAttribute(ModelKeyNames.BOARD, b);
 		
 		return new ModelAndView(JspPaths.POST_CREATE, model);

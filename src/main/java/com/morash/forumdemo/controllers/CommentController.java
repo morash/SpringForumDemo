@@ -53,11 +53,6 @@ public class CommentController {
 
 		Post respondToPost = postService.getPostById(postId);
 
-		if (!loginService.isLoggedIn()) {
-			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.COMMENT_NO_USER);
-			return new ModelAndView("redirect:/user/login", model);
-		}
-
 		model.addAttribute(ModelKeyNames.POST, respondToPost);
 
 		return new ModelAndView(JspPaths.COMMENT_CREATE_FOR_POST, model);
@@ -88,11 +83,6 @@ public class CommentController {
 		// Returns 404 if no comment with commentId exists
 
 		Comment respondToComment = commentService.getCommentById(commentId);
-
-		if (!loginService.isLoggedIn()) {
-			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.COMMENT_NO_USER);
-			return new ModelAndView("redirect:/user/login", model);
-		}
 
 		model.addAttribute(ModelKeyNames.POST, respondToComment.getRespondingToPost());
 		model.addAttribute(ModelKeyNames.COMMENT, respondToComment);

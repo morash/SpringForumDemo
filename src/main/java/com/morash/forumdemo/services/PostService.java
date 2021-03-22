@@ -38,7 +38,7 @@ public class PostService {
 	public Post getPostById(int id) throws PostNotFoundException {
 		Optional<Post> post = postRepo.findById(id);
 		
-		if (post.isEmpty()) {
+		if (!post.isPresent()) {
 			throw new PostNotFoundException();
 		}
 		

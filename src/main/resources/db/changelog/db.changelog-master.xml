@@ -11,4 +11,5 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
   <include file="updates/04-administration_items.xml" relativeToChangelogFile="true"/>
   <include file="updates/05-change_reserved_name_keyword.xml" relativeToChangelogFile="true"/>
   <include file="updates/06-change_reserved_desc_keyword.xml" relativeToChangelogFile="true"/>
+  <include file="updates/07-expand_user_password_field.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

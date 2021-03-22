@@ -23,7 +23,7 @@ public class CommentService {
 	public Comment getCommentById(int id) throws CommentNotFoundException {
 		Optional<Comment> comment = commentRepo.findById(id);
 		
-		if (comment.isEmpty()) {
+		if (!comment.isPresent()) {
 			throw new CommentNotFoundException();
 		}
 		

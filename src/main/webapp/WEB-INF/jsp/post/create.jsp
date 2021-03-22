@@ -4,6 +4,7 @@
 <t:base title="Create Post">
 	<h2>${ board.getName() }</h2>
 	<form action="/post/create/${ board.getName() }" method="POST">
+    	<c:import url="../imports/csrf_token.jsp"/>
 		<label>Title:</label>
 		<input name="title" type="text"/>
 		<label>Contents: </label>

@@ -98,5 +98,7 @@ public class User {
 		this.isSiteAdmin = isSiteAdmin;
 	}
 
-	
+	public String toString() {
+		return "User[id=" + id + ";username='" + username + "';email='" + email+"';isSiteAdmin=" + isSiteAdmin + "]";
+	}
 }

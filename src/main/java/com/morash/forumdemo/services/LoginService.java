@@ -1,20 +1,29 @@
 package com.morash.forumdemo.services;
 
+import java.security.Principal;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.morash.forumdemo.data.LoginInfo;
+import com.morash.forumdemo.data.UserPrincipal;
 import com.morash.forumdemo.data.constants.SessionKeyNames;
 import com.morash.forumdemo.data.entity.User;
 import com.morash.forumdemo.data.repository.UserRepository;
 import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 
 @Service
-public class LoginService {
+public class LoginService implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepo;
 	
@@ -23,12 +32,19 @@ public class LoginService {
 	
 	public User getCurrentUser() {
 		// Returns user currently logged into the session
-		return (User) session.getAttribute(SessionKeyNames.USER_KEY);
-	}
-	
-	public void setCurrentUser(User user) {
-		// Sets the sessions current user
-		session.setAttribute(SessionKeyNames.USER_KEY, null);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		if (authentication instanceof AnonymousAuthenticationToken) {
+			return null;
+		}
+		
+		Optional<User> user = userRepo.findUserWithUsername(authentication.getName());
+		
+		if (!user.isPresent()) {
+			return null;
+		}
+		
+		return user.get();
 	}
 	
 	public User requiredLogin() throws UserNotLoggedInException {
@@ -42,26 +58,18 @@ public class LoginService {
 	}
 	
 	public boolean isLoggedIn() {
-		return getCurrentUser() == null;
+		return getCurrentUser() != null;
 	}
-	
-	public boolean attemptLogin(LoginInfo loginInfo) {
-		// Attempts to login with the provided credentials and updates the current user if successful
-		// returns boolean indicating success
-		Optional<User> user = userRepo.findUserWithUsername(loginInfo.getUsername());
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		Optional<User> user = userRepo.findUserWithUsername(username);
 		
-		if (user.isPresent()) {
-			if (user.get().getPassword() == loginInfo.getPassword()) {
-				setCurrentUser(user.get());
-				return true;
-			}
+		if (!user.isPresent()) {
+			throw new UsernameNotFoundException(username);
 		}
 		
-		return false;
-	}
-	
-	public void logout() {
-		//Sets the current user to null
-		setCurrentUser(null);
+		return new UserPrincipal(user.get());
 	}
 }

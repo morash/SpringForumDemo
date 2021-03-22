@@ -45,7 +45,7 @@ public class UserController {
 	@PostMapping(value = "/create")
 	public RedirectView create(Model model, User newUser) {
 		// Creates a new user from form input
-		userService.createUser(newUser);
+		userService.register(newUser);
 		return new RedirectView("/");
 	}
 
@@ -53,27 +53,6 @@ public class UserController {
 	public String serveLoginPage(Model model) {
 		// Serves the login page
 		return JspPaths.USER_LOGIN;
-	}
-
-	@PostMapping(value = "/login")
-	public RedirectView login(RedirectAttributes attributes, LoginInfo loginInfo) {
-		// Attempts to login and add user to the session
-		// Returns to the login page with generic error message if fail
-		boolean loginSuccess = loginService.attemptLogin(loginInfo);
-		
-		if (loginSuccess) {
-			return new RedirectView(loginInfo.getRedirectOnSuccess());
-		}
-
-		attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.INVALID_CREDENTIALS);
-		return new RedirectView("/user/login");
-	}
-
-	@GetMapping(value = "/logout")
-	public RedirectView logout(RedirectAttributes attributes) {
-		// Removes the user from the session
-		loginService.logout();
-		return new RedirectView("/");
 	}
 
 	@GetMapping(value = "/view/{userId}")

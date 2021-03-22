@@ -48,12 +48,6 @@ public class BoardController {
 	public ModelAndView create(RedirectAttributes attributes, ModelMap model) {
 		// Serves the form page to create a new board
 		// Redirects to login page if user isn't registered to session
-		
-		if (!loginService.isLoggedIn()) {
-			attributes.addFlashAttribute(ModelKeyNames.ERROR_MESSAGE, ErrorMessages.BOARD_NO_USER);
-			return new ModelAndView("redirect:/user/login", model);
-		}
-		
 		ModelAndView showCreatePage = new ModelAndView(JspPaths.BOARD_CREATE, model);
 		
 		return showCreatePage;
