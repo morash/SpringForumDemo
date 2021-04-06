@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.StaticResourceLocation;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,7 +43,7 @@ public class ForumDemoApplication extends SpringBootServletInitializer {
 	public String hello(Model model, HttpSession session) {
 		Set<Board> topBoardList = boardRepo.getTopBoards();
 		model.addAttribute(ModelKeyNames.TOP_BOARD_LIST, topBoardList);
-		
+
 		return "home";
 	}
 

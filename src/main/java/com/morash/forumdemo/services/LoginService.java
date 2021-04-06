@@ -63,7 +63,6 @@ public class LoginService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
 		Optional<User> user = userRepo.findUserWithUsername(username);
 		
 		if (!user.isPresent()) {

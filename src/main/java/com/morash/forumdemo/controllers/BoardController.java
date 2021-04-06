@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,8 +25,8 @@ import com.morash.forumdemo.exceptions.UserNotLoggedInException;
 import com.morash.forumdemo.services.BoardService;
 import com.morash.forumdemo.services.LoginService;
 
-@Controller
-@RequestMapping("/board")
+@RestController
+@RequestMapping("/api/board")
 public class BoardController {
 	@Autowired
 	private LoginService loginService;
@@ -34,14 +35,19 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@GetMapping("/")
-	public String index(Model model) {
+	public ArrayList<Board> index(Model model) {
 		// Serves the board index page
 		// TODO add pagination
 		ArrayList<Board> boardIndex = boardService.getBoardIndex();
 		
-		model.addAttribute(ModelKeyNames.BOARD_INDEX_LIST, boardIndex);
+		return boardIndex;
+	}
+	
+	@GetMapping("/{boardName}")
+	public Board view(Model model, @PathVariable(name="boardName") String boardName) throws BoardNotFoundException {
+		Board board = boardService.getBoardByName(boardName);
 		
-		return JspPaths.BOARD_INDEX;
+		return board;
 	}
 	
 	@GetMapping("/create")
@@ -60,19 +66,5 @@ public class BoardController {
 		
 		boardService.createBoard(newBoard);
 		return new RedirectView("/board/view" + newBoard.getName());
-	}
-	
-	@GetMapping("/view/{boardName}")
-	public String view(Model model, @PathVariable(name="boardName") String boardName) throws BoardNotFoundException {
-		// Shows the board with boardName
-		// TODO add pagination
-		
-		Board board = boardService.getBoardByName(boardName);
-		ArrayList<Post> boardPosts = boardService.getPostsForBoard(board);
-		
-		model.addAttribute(ModelKeyNames.BOARD, board);
-		model.addAttribute(ModelKeyNames.POST_LIST, boardPosts);
-		
-		return JspPaths.BOARD_VIEW;
 	}
 }

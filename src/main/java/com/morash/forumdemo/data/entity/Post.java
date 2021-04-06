@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Post {
 	@Id
@@ -25,6 +27,7 @@ public class Post {
 	private String contents;
 	
 	@OneToMany(mappedBy="respondingToPost")
+	@JsonIgnore
 	private Set<Comment> comments;
 
 	private LocalDateTime postDate;

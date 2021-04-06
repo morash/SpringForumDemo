@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Michael
  *
@@ -29,16 +31,19 @@ public class User {
 	
 	@Column(name="isSiteAdmin")
 	private Boolean isSiteAdmin = false;
-
-	// TODO: Figure out hashing and Spring Security modules
+	
+	@JsonIgnore
 	private String password;
 
+	@JsonIgnore
 	@OneToMany(mappedBy="poster")
 	private Set<Post> posts;
 
+	@JsonIgnore
 	@OneToMany(mappedBy="poster")
 	private Set<Comment> comments;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="createdBy")
 	private Set<Board> ownedBoards;
 

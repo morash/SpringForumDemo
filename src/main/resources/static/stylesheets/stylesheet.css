@@ -12,11 +12,11 @@ header * {
 	margin: 5px;
 }
 
-.headerAccountInfo * {
+.Authentication * {
 	display: inline;
 }
 
-.bodyContainer {
+.BodyContainer {
 	margin: 8px;
 }
 
@@ -33,7 +33,7 @@ header * {
 	border-radius: 5px;
 }
 
-.child_comments {
+.CommentTree {
 	padding-left: 8px;
 	border-left: 2px solid black;
 }

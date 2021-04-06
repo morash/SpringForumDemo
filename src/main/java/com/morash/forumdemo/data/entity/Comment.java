@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Comment {
@@ -27,6 +30,7 @@ public class Comment {
 	private Comment respondingToComment;
 
 	@OneToMany(mappedBy = "respondingToComment")
+	@JsonIgnore
 	private Set<Comment> comments;
 	private String contents;
 
@@ -34,6 +38,9 @@ public class Comment {
 	@ManyToOne
 	@JoinColumn(name="poster_id", referencedColumnName="id")
 	private User poster;
+	
+	@Transient
+	private Integer commentCount;
 
 	public Integer getId() {
 		return id;
@@ -89,6 +96,10 @@ public class Comment {
 
 	public void setComments(Set<Comment> comments) {
 		this.comments = comments;
+	}
+	
+	public Integer getCommentCount() {
+		return this.comments.size();
 	}
 
 }

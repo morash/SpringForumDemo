@@ -3,6 +3,8 @@
  */
 package com.morash.forumdemo.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -20,6 +23,7 @@ import com.morash.forumdemo.data.constants.JspPaths;
 import com.morash.forumdemo.data.constants.ModelKeyNames;
 import com.morash.forumdemo.data.entity.Comment;
 import com.morash.forumdemo.data.entity.Post;
+import com.morash.forumdemo.exceptions.BoardNotFoundException;
 import com.morash.forumdemo.exceptions.CommentNotFoundException;
 import com.morash.forumdemo.exceptions.PostNotFoundException;
 import com.morash.forumdemo.exceptions.UserNotLoggedInException;
@@ -32,8 +36,12 @@ import com.morash.forumdemo.services.PostService;
  *
  */
 
-@Controller
-@RequestMapping("/comment")
+@RestController
+@RequestMapping({
+	"/api/board/{boardName}/post/{postId}/comment",
+	"/api/board/{boardName}/post/~/comment",
+	"/api/board/~/post/{postId}/comment",
+	"/api/board/~/post/~/comment" })
 public class CommentController {
 	@Autowired
 	private LoginService loginService;
@@ -43,6 +51,27 @@ public class CommentController {
 
 	@Autowired
 	private CommentService commentService;
+
+	@GetMapping({"/", "/{commentId}/children"})
+	public ArrayList<Comment> index(@PathVariable(name = "postId", required = false) Integer postId,
+			@PathVariable(name = "boardName", required = false) String boardName,
+			@PathVariable(name = "commentId", required = false) Integer commentId)
+			throws CommentNotFoundException, PostNotFoundException, BoardNotFoundException {
+		if (commentId != null) {
+			return commentService.getCommentsRespondingToComment(commentId);
+		} else if (postId != null) {
+			return commentService.getCommentsForPost(postId);
+		} else if (boardName != null) {
+			return commentService.getCommentsForBoard(boardName);
+		}
+
+		return commentService.getAllComments();
+	}
+	
+	@GetMapping("/{commentId}")
+	public Comment view(@PathVariable(name="commentId", required=true) Integer commentId) throws CommentNotFoundException {
+		return commentService.getCommentById(commentId);
+	}
 
 	@GetMapping("/create/respondtopost/{postId}")
 	public ModelAndView createForPost(RedirectAttributes attributes, ModelMap model,

@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @author Michael
  *
@@ -27,10 +29,12 @@ public class Board {
 	
 	@Column(name="board_name")
 	private String name;
+	
 	@Column(name="board_desc")
 	private String desc;
 
 	@OneToMany(mappedBy="board")
+	@JsonIgnore
 	private Set<Post> posts;
 	
 	@ManyToOne

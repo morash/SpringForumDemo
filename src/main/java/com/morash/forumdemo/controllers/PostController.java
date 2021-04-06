@@ -4,6 +4,7 @@
 package com.morash.forumdemo.controllers;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -34,8 +36,8 @@ import com.morash.forumdemo.services.PostService;
  * @author Michael
  *
  */
-@Controller
-@RequestMapping("/post")
+@RestController
+@RequestMapping({"api/board/~/post", "api/board/{boardName}/post"})
 public class PostController {
 	@Autowired
 	private LoginService loginService;
@@ -46,7 +48,21 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
-	@GetMapping("/create/{boardName}")
+	@GetMapping("/") 
+	public ArrayList<Post> boardIndex(@PathVariable(name="boardName", required=false) String boardName) throws BoardNotFoundException {
+		if (boardName != null) {
+			return postService.getPostsForBoard(boardName);
+		}
+		
+		return postService.getAllPosts();
+	}
+	
+	@GetMapping("/{postId}")
+	public Post view(@PathVariable(name="postId", required=true) Integer postId) throws PostNotFoundException {
+		return postService.getPostById(postId);
+	}
+	
+	@GetMapping("/create")
 	public ModelAndView create(RedirectAttributes attributes, ModelMap model,
 			@PathVariable(name="boardName", required=true) String boardName) throws BoardNotFoundException {
 		// Gives the form to create a post in the board with boardName
@@ -60,7 +76,7 @@ public class PostController {
 		return new ModelAndView(JspPaths.POST_CREATE, model);
 	}
 	
-	@PostMapping("/create/{boardName}")
+	@PostMapping("/create")
 	public RedirectView create(RedirectAttributes attributes,
 			@PathVariable(name="boardName", required=true) String boardName, Post newPost) throws BoardNotFoundException, UserNotLoggedInException {
 		// Creates a new post using the post parameters
@@ -72,18 +88,5 @@ public class PostController {
 		postService.createPost(board, newPost);
 		
 		return new RedirectView("/board/view/" + board.getName());
-	}
-	
-	@GetMapping("/view/{postId}")
-	public String view(Model model, @PathVariable(value = "postId") Integer postId) throws PostNotFoundException {
-		// Shows the post passing top-level comment in through model
-		
-		Post post = postService.getPostById(postId);
-		ArrayList<Comment> topLevelComments = postService.getTopLevelCommentsForPost(post);
-		
-		model.addAttribute(ModelKeyNames.POST, post);
-		model.addAttribute(ModelKeyNames.COMMENT_LIST, topLevelComments);
-		
-		return JspPaths.POST_VIEW;
 	}
 }

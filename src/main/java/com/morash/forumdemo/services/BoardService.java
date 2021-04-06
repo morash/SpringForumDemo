@@ -41,7 +41,7 @@ public class BoardService {
 		Optional<Board> board = boardRepo.findBoardByName(name);
 		
 		if (!board.isPresent()) {
-			throw new BoardNotFoundException();
+			throw new BoardNotFoundException(name);
 		}
 		
 		return board.get();
@@ -50,9 +50,5 @@ public class BoardService {
 	public void createBoard(Board newBoard) throws UserNotLoggedInException {
 		newBoard.setCreatedBy(loginService.requiredLogin());
 		boardRepo.save(newBoard);
-	}
-	
-	public ArrayList<Post> getPostsForBoard(Board board) {
-		return postRepo.getPostsForBoard(board, Sort.by(Direction.DESC, "postDate"));
 	}
 }
